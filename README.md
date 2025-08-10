@@ -52,16 +52,6 @@ Projects-Requirements-Generator/
 ├── .gitignore
 └── README.md
 ```
-
----
-
-## 📸 Screenshots
-### Home Page
-![Home Page](screenshots/homepage.png)
-
-### Generated Requirements
-![Generated Requirements](screenshots/results.png)
-
 ---
 
 ## 🔧 Installation & Setup
@@ -106,8 +96,6 @@ npm run dev
 
 ## 👨‍💻 Author
 **Muhammad Saqib**  
-- 🌐 [Portfolio](#)  
-- 💼 [LinkedIn](#)  
 - 📧 saqisaqi.sk@gmail.com  
 
 ---
@@ -115,8 +103,3 @@ npm run dev
 ## ⭐ Contribute
 Contributions are welcome!  
 Fork the repo, make changes, and submit a pull request.
-
----
-
-## 📜 License
-This project is licensed under the **MIT License** – feel free to use and modify.
