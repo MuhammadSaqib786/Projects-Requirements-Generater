@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+httpx
+pydantic-settings
+python-dotenv
+orjson
+tenacity
+azure-ai-inference
+azure-core
+python-docx
+reportlab
+openai>=1.40
