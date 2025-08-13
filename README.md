@@ -75,6 +75,51 @@ cd ../mai-frontend
 npm install
 npm run dev
 ```
+## 🐳 Run with Docker
+
+Make sure you have **Docker** and **Docker Compose** installed, then run:
+
+```bash
+docker compose up -d --build
+```
+
+This will:
+- Build the **backend** (FastAPI + Python)
+- Build the **frontend** (React + TypeScript)
+- Start both containers
+- Map ports so you can access the app in your browser
+
+Once running, open your browser at:
+
+```
+http://127.0.0.1
+```
+
+The frontend will connect to the backend automatically inside Docker.
+
+---
+
+**Check Backend API Health:**
+```
+http://127.0.0.1:8000/api/health
+```
+If it returns:
+```json
+{"status": "ok"}
+```
+then your API is ready.
+
+---
+
+**Stop the Containers:**
+```bash
+docker compose down
+```
+
+**Rebuild & Restart:**
+```bash
+docker compose up -d --build
+```
 
 ---
 
