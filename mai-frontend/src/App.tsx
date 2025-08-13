@@ -1,18 +1,19 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { generateRequirements, exportRequirements } from "./lib/api";
-import type { ProjectType } from "./lib/api";
 import { saveAs } from "file-saver";
 
+// Zod schema: make tone/level REQUIRED (no .default())
 const schema = z.object({
   projectName: z.string().min(2, "Enter a valid name."),
   projectType: z.enum(["Mechanical", "Electrical", "Civil", "Software", "Other"]),
   description: z.string().min(10, "Min 10 characters."),
-  tone: z.enum(["formal", "concise"]).default("formal"),
-  level: z.enum(["high", "detailed"]).default("detailed"),
+  tone: z.enum(["formal", "concise"]),
+  level: z.enum(["high", "detailed"]),
 });
+
 type FormData = z.infer<typeof schema>;
 
 export default function App() {
@@ -23,14 +24,14 @@ export default function App() {
     resolver: zodResolver(schema),
     defaultValues: {
       projectName: "",
-      projectType: "Mechanical" as ProjectType,
+      projectType: "Mechanical",
       description: "",
-      tone: "formal",
-      level: "detailed",
+      tone: "formal",        // supply defaults here
+      level: "detailed",     // and here
     },
   });
 
-  const onSubmit = async (vals: FormData) => {
+  const onSubmit: SubmitHandler<FormData> = async (vals) => {
     setLoading(true);
     setResult(null);
     try {
@@ -38,7 +39,7 @@ export default function App() {
       setResult(data);
     } catch (e) {
       console.error(e);
-      alert("Failed to generate. Is the backend running on :8000?");
+      alert("Failed to generate. Is the backend running?");
     } finally {
       setLoading(false);
     }
@@ -68,7 +69,7 @@ export default function App() {
         <div className="mx-auto max-w-6xl px-6 py-10">
           <span className="text-[var(--green)] font-semibold">Mai</span>
           <h1 className="text-4xl md:text-5xl font-bold mt-3">
-            AI‑Assisted Technical Requirement Generator
+            AI-Assisted Technical Requirement Generator
           </h1>
           <p className="mt-3 opacity-90 max-w-2xl">
             Create comprehensive technical requirements for your engineering projects with AI.
@@ -88,7 +89,7 @@ export default function App() {
 
           <label className="block text-sm mb-1">Project type</label>
           <select className="w-full rounded-xl border p-3 mb-2" {...register("projectType")}>
-            {["Mechanical","Electrical","Civil","Software","Other"].map(t => (
+            {["Mechanical", "Electrical", "Civil", "Software", "Other"].map((t) => (
               <option key={t} value={t}>{t}</option>
             ))}
           </select>
@@ -169,14 +170,20 @@ export default function App() {
                           </div>
                           {r.acceptance_criteria?.length > 0 && (
                             <ul className="list-disc ml-6 mt-2 text-sm opacity-90">
-                              {r.acceptance_criteria.map((a: string, i: number) => (<li key={i}>{a}</li>))}
+                              {r.acceptance_criteria.map((a: string, i: number) => (
+                                <li key={i}>{a}</li>
+                              ))}
                             </ul>
                           )}
                           {r.rationale && (
-                            <p className="text-xs mt-2 opacity-80"><em>Rationale:</em> {r.rationale}</p>
+                            <p className="text-xs mt-2 opacity-80">
+                              <em>Rationale:</em> {r.rationale}
+                            </p>
                           )}
                           {r.standard_refs?.length > 0 && (
-                            <p className="text-xs mt-1 opacity-80"><em>Standards:</em> {r.standard_refs.join(", ")}</p>
+                            <p className="text-xs mt-1 opacity-80">
+                              <em>Standards:</em> {r.standard_refs.join(", ")}
+                            </p>
                           )}
                         </li>
                       ))}

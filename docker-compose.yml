@@ -1,0 +1,23 @@
+services:
+  backend:
+    build: ./mai-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./mai-backend/.env          # your tokens/keys here if required
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8000/api/health || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+
+  frontend:
+    build: ./mai-frontend
+    ports:
+      - "80:80"   # 🔹 Map container port 80 to host port 80 so you can use http://127.0.0.1
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
