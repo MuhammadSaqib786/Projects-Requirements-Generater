@@ -1,30 +1,33 @@
 import axios from "axios";
 
-export const API = axios.create({
-  baseURL: "http://127.0.0.1:8000/api",
-  // was 20000; Gemini can take longer on first call / bigger outputs
-  timeout: 90000, // 90s
-});
+// Use env when provided; default to /api (works in Docker/Nginx)
+const baseURL =
+  (import.meta as any).env?.VITE_API_BASE?.trim() ||
+  "/api";
 
+export const API = axios.create({
+  baseURL,
+  timeout: 90_000, // 90s
+});
 
 // ---- Types ----
 export type ProjectType = "Mechanical" | "Electrical" | "Civil" | "Software" | "Other";
 
 export interface GenerateReq {
   projectName: string;
-  projectType: ProjectType;
+  projectType: "Mechanical" | "Electrical" | "Civil" | "Software" | "Other";
   description: string;
-  tone?: "formal" | "concise";
-  level?: "high" | "detailed";
+  tone: "formal" | "concise";
+  level: "high" | "detailed";
 }
+
+
 
 export async function generateRequirements(payload: GenerateReq) {
   const { data } = await API.post("/generate", payload);
   return data; // { project_name, summary, categories, requirements, generated_at }
 }
 
-// add:
-export async function exportRequirements(format: "pdf"|"docx"|"md", payload: any) {
-  const res = await API.post(`/export?format=${format}`, payload, { responseType: "blob" });
-  return res;
+export async function exportRequirements(format: "pdf" | "docx" | "md", payload: any) {
+  return API.post(`/export?format=${format}`, payload, { responseType: "blob" });
 }
